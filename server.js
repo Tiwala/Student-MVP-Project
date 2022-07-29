@@ -7,12 +7,23 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 6969;
+const dbConfig = {
+    connectionString: process.env.DATABASE_URL
+};
+
+if (process.env.NODE_ENV === "production") {
+    dbConfig.ssl = {
+        rejectUnauthorized: false
+    };
+}
+
+const pool = new pg.Pool(dbConfig);
 
 app.use(express.static("static"));
 
-const pool = new pg.Pool({
-    database: process.env.PGDATABASE
-});
+// const pool = new pg.Pool({
+//     database: process.env.PGDATABASE
+// });
 
 const unknownHTTP = (req, res, next) => {
     res.sendStatus(404);
