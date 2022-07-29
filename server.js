@@ -1,14 +1,17 @@
 import express from 'express'
 import fs from 'fs'
 import pg from 'pg'
+import dotenv from 'dotenv'
+
+dotenv.config();
 
 const app = express();
-const PORT = 6969;
+const PORT = process.env.PORT || 6969;
 
 app.use(express.static("static"));
 
 const pool = new pg.Pool({
-    database: 'weeblist'
+    database: process.env.PGDATABASE
 });
 
 const unknownHTTP = (req, res, next) => {
