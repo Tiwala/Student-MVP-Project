@@ -9,7 +9,8 @@ CREATE TABLE weebs (
 
 CREATE TABLE anime (
     anime_id SERIAL,
-    name TEXT UNIQUE
+    name TEXT UNIQUE,
+    image TEXT
 );
 
 CREATE TABLE reviews (
@@ -25,12 +26,13 @@ INSERT INTO weebs (name) VALUES ('charles');
 INSERT INTO weebs (name) VALUES ('alex');
 INSERT INTO weebs (name) VALUES ('martha');
 
-INSERT INTO anime (name) VALUES ('steins;gate');
-INSERT INTO anime (name) VALUES ('inuyasha');
-INSERT INTO anime (name) VALUES ('sword art online');
-INSERT INTO anime (name) VALUES ('full metal alchemist brotherhood');
-INSERT INTO anime (name) VALUES ('princess mononoke');
-INSERT INTO anime (name) VALUES ('eureka seven');
+INSERT INTO anime (name, image) VALUES ('steins;gate', 'https://cdn.myanimelist.net/images/anime/5/73199.jpg');
+INSERT INTO anime (name, image) VALUES ('inuyasha', 'https://cdn.myanimelist.net/images/anime/1589/95329.jpg');
+INSERT INTO anime (name, image) VALUES ('sword art online', 'https://cdn.myanimelist.net/images/anime/11/39717.jpg');
+INSERT INTO anime (name, image) VALUES ('full metal alchemist brotherhood', 'https://cdn.myanimelist.net/images/anime/1223/96541.jpg');
+INSERT INTO anime (name, image) VALUES ('princess mononoke', 'https://cdn.myanimelist.net/images/anime/7/75919.jpg');
+INSERT INTO anime (name, image) VALUES ('eureka seven', 'https://cdn.myanimelist.net/images/anime/12/34443.jpg');
+INSERT INTO anime (name, image) VALUES ('your name', 'https://cdn.myanimelist.net/images/anime/5/87048.jpg');
 
 INSERT INTO reviews (anime, review, reviewer) VALUES ('steins;gate', 'the greatest sci-fi thriller in anime history', 'gerard');
 INSERT INTO reviews (anime, review, reviewer) VALUES ('sword art online', 'trash', 'randy');
