@@ -209,6 +209,21 @@ app.patch('/reviews/:id', (req, res, next) => {
     }
 })
 
+// Deletes reviews
+app.delete('/reviews/:id', (req, res, next) => {
+    const id = req.params.id;
+    pool.query(`DELETE FROM reviews
+    WHERE review_id = $1 RETURNING *;`, [id])
+    .then((data) => {
+        if (data.rows[0] === undefined) {
+            res.status(404);
+            res.send(`The review at id ${id} does not exist!`)
+        } else {
+            res.send(data.rows[0]);
+        }
+    }).catch(next);
+})
+
 app.use(unknownHTTP);
 
 app.use(internalError);

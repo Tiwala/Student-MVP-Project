@@ -7,6 +7,11 @@ const login = document.getElementById('login');
 // login username input
 const userLogin = document.getElementById('userLogin');
 
+const reviewForm = document.getElementById('reviewForm');
+const animeReviewInput = document.getElementById('anime');
+const reviewInput = document.getElementById('review');
+const reviewError = document.getElementById('reviewError')
+
 // Verifies who the current user is; determines what they can do
 let currentUser = "";
 
@@ -46,13 +51,52 @@ login.addEventListener('submit', (event) => {
     })
 })
 
-// if (currentUser === "") {
-//     fetch('/weebs')
-//     .then((res) => res.json())
-//     .then((weebs) => {
-        
-//     })
-// }
+reviewForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    fetch('/anime')
+    .then((res) => res.json())
+    .then((anime) => {
+        let animeName = "";
+        for (let currentAnime of anime) {
+            if (currentAnime.name === animeReviewInput.value) {
+                animeName = currentAnime.name;
+                console.log(animeName);
+                break;
+            }
+        }
+        if (currentUser === "") {
+            reviewError.innerText = "Login first, weeb!";
+        }
+        if (animeName === "") {
+            reviewError.innerText = "That anime is not on our database, weeb!";
+        } else {
+            let newReview = {
+                "anime": animeName,
+                "review": reviewInput.value,
+                "reviewer": currentUser
+            };
+            fetch('/reviews', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newReview),
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                reviewError.innerHTML = "";
+                console.log(data);
+            })
+        }
+    })
+})
+
+
+
+
+
+
 
 fetch('/anime')
     .then((res) => res.json())  
