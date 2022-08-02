@@ -6,9 +6,14 @@ const reviewFormDiv = document.getElementById('reviewFormDiv');
 const reviewForm = document.getElementById('reviewForm');
 const userLogDiv = document.getElementById('userLogDiv');
 const displayAnime = document.getElementById('displayAnime');
+const logo = document.getElementById('logo')
 
 let currentUser = "";
 
+
+logo.addEventListener('click', () => {
+    location.reload();
+})
 
 // User "login"
 login.addEventListener('submit', (event) => {

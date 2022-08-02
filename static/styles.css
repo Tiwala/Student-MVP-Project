@@ -1,5 +1,10 @@
 html {
     overflow-y: scroll;
+    font-family: 'Roboto', sans-serif;
+    background-image: url('images/Monocolor Spring.jpeg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
 }
 
 #header {
@@ -8,22 +13,29 @@ html {
 }
 
 #logo {
-    width: 50%;
-    align-self: start;
+    width: 100%;
+}
+
+#logo:hover {
+    cursor: pointer;
 }
 
 .userLog {
     width: 100%;
 }
 
+#loginButton:hover {
+    cursor: pointer;
+}
+
 .mainContainer {
     display: flex;
     flex-direction: column;
     margin: auto;
-    border: 1px black;
-    border-style: solid;
+    box-sizing: border-box;
     width: 80%;
     height: 100%;
+    background-color: rgba(192,192,192,0.8)
 }
 
 .navContainer {
@@ -43,7 +55,7 @@ html {
 }
 
 #displayAnime:hover {
-    background-color: lightblue;
+    background-color: darkgray;
     color: white;
     cursor: pointer;
 }
@@ -59,8 +71,6 @@ html {
 .newAnime {
     display: flex;
     flex-direction: column;
-    background-color: white;
-    opacity: 0.9;
     box-sizing: border-box;
     align-items: center;
     justify-content: center;
@@ -72,7 +82,7 @@ html {
 }
 
 .animeTitle:hover {
-    background-color: lightblue;
+    background-color: darkgray;
     color: white;
     cursor: pointer;
 }
@@ -99,4 +109,8 @@ html {
 #reviewError {
     color: red;
     font-weight: bold;
+}
+
+#reviewSubmit:hover {
+    cursor: pointer;
 }
