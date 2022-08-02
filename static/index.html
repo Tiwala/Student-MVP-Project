@@ -10,16 +10,20 @@
 </head>
 <body>
     <div id="header">
-        <img id="logo" src="images/theWeebListLogo.png">
-        <form id="login">
-            <input id="userLogin" type="text" name="userLogin" placeholder="Enter your name, weeb" required/>
-            <button id="submit">Login</button>
-        </form>
+        <div>
+            <img id="logo" src="images/theWeebListLogo.png">
+        </div>
+        <div id="userLogDiv">
+            <form id="login">
+                <input id="userLogin" type="text" name="userLogin" placeholder="Enter your name, weeb" required/>
+                <button id="submit">Login</button>
+            </form>
+        </div>
     </div>
     <div class="mainContainer">
         <nav id="navbar">
             <div class="navContainer">
-                <div id="displayAnime">Anime</div>
+                <div id="displayAnime">Anime List</div>
                 <form id="animeSearchForm">
                     <input id="animeSearchInput" type="text" name="animeSearchInput" placeholder="Search anime here">
                 </form>
@@ -28,14 +32,14 @@
         <div class="bodyContainer">
 
         </div>
+        <div id="reviewFormDiv">
+            <div id="reviewError"></div>
+            <form id="reviewForm">
+                <input id="anime" type="text" name="anime" placeholder="What anime do you want to review?" required/>
+                <textarea id="review" rows="4" cols="10" name="review" placeholder="Write a review for this anime!"></textarea required>
+                <button id="reviewSubmit">Submit Review</button>
+            </form>
+        </div>
     </div>
-    <!-- <div id="reviewDiv">
-        <div id="reviewError"></div>
-        <form id="reviewForm">
-            <input id="anime" type="text" name="anime" placeholder="What anime do you want to review?" required/>
-            <input id="review" type="text" name="review" placeholder="Write a review for this anime!" required/>
-            <button id="reviewSubmit">Submit Review</button>
-        </form>
-    </div> -->
 </body>
 </html>

@@ -1,26 +1,19 @@
 const mainContainer = document.body.querySelector('.mainContainer');
 const bodyContainer = document.body.querySelector('.bodyContainer');
-
-
-// Login form
 const login = document.getElementById('login');
-
-// Search anime
 const animeSearchForm = document.getElementById('animeSearchForm');
-
-
-// Accesses the review form
+const reviewFormDiv = document.getElementById('reviewFormDiv');
 const reviewForm = document.getElementById('reviewForm');
+const userLogDiv = document.getElementById('userLogDiv');
+const displayAnime = document.getElementById('displayAnime');
 
-// Verifies who the current user is; determines what they can do
 let currentUser = "";
 
-const displayAnime = document.getElementById('displayAnime');
 
 // User "login"
 login.addEventListener('submit', (event) => {
     event.preventDefault();
-    
+
     // login username input
     const userLogin = document.getElementById('userLogin');
 
@@ -36,6 +29,16 @@ login.addEventListener('submit', (event) => {
                 break;
             }
         }
+        // Removes the user form; replaces it with the current user
+        userLogDiv.innerHTML = '';
+
+        // DOM for username creation
+        let userLog = document.createElement('div');
+        userLog.classList.add('userLog');
+        userLog.innerHTML = `User: <strong>${currentUser}</strong>`
+        userLogDiv.append(userLog);
+
+        
         // If the entered username is not in the weebs table, makes a post request
         if (currentUser === "") {
             let newUser = { "name": userLogin.value };
@@ -51,6 +54,13 @@ login.addEventListener('submit', (event) => {
                 // Makes the current user into the newly entered username
                 currentUser = data.name;
                 console.log(data.name);
+
+                userLogDiv.innerHTML = '';
+
+                let userLog = document.createElement('div');
+                userLog.classList.add('userLog');
+                userLog.innerHTML = `User: <strong>${currentUser}</strong>`
+                userLogDiv.append(userLog);
             })
         }
     })
@@ -76,9 +86,58 @@ displayAnime.addEventListener('click', () => {
             newTitle.classList.add('animeTitle')
             newTitle.innerText = animeTitle;
 
+            let spaceDiv = document.createElement('div')
+            spaceDiv.classList.add('spaceDiv');
+
             bodyContainer.append(newAnime);
             newAnime.append(newImg);
             newAnime.append(newTitle);
+            bodyContainer.append(spaceDiv);
+
+            newTitle.addEventListener('click', () => {
+                bodyContainer.innerHTML = '';
+
+                fetch(`/anime/${animeTitle}`)
+                .then((res) => res.json())
+                .then((anime) => {
+                    const animeImage = anime.image;
+                
+                    let newAnime = document.createElement('div');
+                    newAnime.classList.add('anime')
+                    let newImg = document.createElement('img');
+                    newImg.classList.add('image');
+                    newImg.src = animeImage;
+                
+                    let newTitle = document.createElement('div');
+                    newTitle.classList.add('animeTitle')
+                    newTitle.innerText = anime.name;
+                
+                    let spaceDiv = document.createElement('div')
+                    spaceDiv.classList.add('spaceDiv');
+                
+                    bodyContainer.append(newAnime);
+                    newAnime.append(newImg);
+                    newAnime.append(newTitle);
+                    bodyContainer.append(spaceDiv);
+                
+                    fetch(`/reviews/${animeTitle}`)
+                    .then((res) => res.json())
+                    .then((reviews) => {
+                        for (let currentReview of reviews) {
+                            let reviewDiv = document.createElement('div');
+                            reviewDiv.classList.add('reviewDiv');
+                            reviewDiv.innerText = `"${currentReview.review}"`;
+                        
+                            let reviewerDiv = document.createElement('div');
+                            reviewerDiv.classList.add('reviewerDiv');
+                            reviewerDiv.innerText = `- ${currentReview.reviewer}`;
+                        
+                            bodyContainer.append(reviewDiv);
+                            bodyContainer.append(reviewerDiv);
+                        }
+                    })
+                })
+            })
         }
     })
 })
@@ -86,13 +145,14 @@ displayAnime.addEventListener('click', () => {
 animeSearchForm.addEventListener('submit', (event) => {
     event.preventDefault();
     const animeSearchInput = document.getElementById('animeSearchInput')
-    const searchedAnime = animeSearchInput.value;
+    const animeTitle = animeSearchInput.value;
     bodyContainer.innerHTML = '';
-    fetch(`/anime/${searchedAnime}`)
+
+
+    fetch(`/anime/${animeTitle}`)
     .then((res) => res.json())
     .then((anime) => {
         const animeImage = anime.image;
-        const animeTitle = anime.name;
 
         let newAnime = document.createElement('div');
         newAnime.classList.add('anime')
@@ -102,11 +162,32 @@ animeSearchForm.addEventListener('submit', (event) => {
 
         let newTitle = document.createElement('div');
         newTitle.classList.add('animeTitle')
-        newTitle.innerText = animeTitle;
+        newTitle.innerText = anime.name;
+
+        let spaceDiv = document.createElement('div')
+        spaceDiv.classList.add('spaceDiv');
 
         bodyContainer.append(newAnime);
         newAnime.append(newImg);
         newAnime.append(newTitle);
+        bodyContainer.append(spaceDiv);
+
+        fetch(`/reviews/${animeTitle}`)
+        .then((res) => res.json())
+        .then((reviews) => {
+            for (let currentReview of reviews) {
+                let reviewDiv = document.createElement('div');
+                reviewDiv.classList.add('reviewDiv');
+                reviewDiv.innerText = `"${currentReview.review}"`;
+
+                let reviewerDiv = document.createElement('div');
+                reviewerDiv.classList.add('reviewerDiv');
+                reviewerDiv.innerText = `- ${currentReview.reviewer}`;
+
+                bodyContainer.append(reviewDiv);
+                bodyContainer.append(reviewerDiv);
+            }
+        })
     })
 })
 
@@ -123,7 +204,7 @@ reviewForm.addEventListener('submit', (event) => {
     .then((anime) => {
         let animeName = "";
         for (let currentAnime of anime) {
-            if (currentAnime.name.toLowerCase() === animeReviewInput.value.toLowerCase()) {
+            if (currentAnime.name === animeReviewInput.value) {
                 animeName = currentAnime.name;
                 console.log(animeName);
                 break;
@@ -151,6 +232,17 @@ reviewForm.addEventListener('submit', (event) => {
             .then((data) => {
                 reviewError.innerHTML = "";
                 console.log(data);
+
+                let reviewDiv = document.createElement('div');
+                reviewDiv.classList.add('reviewDiv');
+                reviewDiv.innerText = `"${reviewInput.value}"`;
+
+                let reviewerDiv = document.createElement('div');
+                reviewerDiv.classList.add('reviewerDiv');
+                reviewerDiv.innerText = `- ${currentUser}`;
+
+                bodyContainer.append(reviewDiv);
+                bodyContainer.append(reviewerDiv);
             })
         }
     })
@@ -160,22 +252,4 @@ reviewForm.addEventListener('submit', (event) => {
 
 
 
-
-fetch('/anime')
-    .then((res) => res.json())  
-    .then((anime) => {
-        console.log(anime);
-    })
-
-fetch('/weebs')
-    .then((res) => res.json())
-    .then((weebs) => {
-        console.log(weebs);
-    })
-
-fetch('/reviews')
-    .then((res) => res.json())
-    .then((reviews) => {
-        console.log(reviews);
-    })
 
