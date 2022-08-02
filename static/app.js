@@ -1,24 +1,29 @@
-// const container = document.body.querySelector('.container');
-// const userForm = document.getElementById('user-form');
-// const logo = document.body.querySelector('input');
+const mainContainer = document.body.querySelector('.mainContainer');
+const bodyContainer = document.body.querySelector('.bodyContainer');
 
-// login form
+
+// Login form
 const login = document.getElementById('login');
-// login username input
-const userLogin = document.getElementById('userLogin');
 
+// Search anime
+const animeSearchForm = document.getElementById('animeSearchForm');
+
+
+// Accesses the review form
 const reviewForm = document.getElementById('reviewForm');
-const animeReviewInput = document.getElementById('anime');
-const reviewInput = document.getElementById('review');
-const reviewError = document.getElementById('reviewError')
 
 // Verifies who the current user is; determines what they can do
 let currentUser = "";
+
+const displayAnime = document.getElementById('displayAnime');
 
 // User "login"
 login.addEventListener('submit', (event) => {
     event.preventDefault();
     
+    // login username input
+    const userLogin = document.getElementById('userLogin');
+
     // On click, makes a fetch request for the weebs table
     fetch('/weebs')
     .then((res) => res.json())
@@ -51,15 +56,74 @@ login.addEventListener('submit', (event) => {
     })
 })
 
+displayAnime.addEventListener('click', () => {
+    bodyContainer.innerHTML = '';
+
+    fetch('/anime')
+    .then((res) => res.json())
+    .then((anime) => {
+        for (let currentAnime of anime) {
+            const animeImage = currentAnime.image;
+            const animeTitle = currentAnime.name;
+
+            let newAnime = document.createElement('div');
+            newAnime.classList.add('anime')
+            let newImg = document.createElement('img');
+            newImg.classList.add('image');
+            newImg.src = animeImage;
+
+            let newTitle = document.createElement('div');
+            newTitle.classList.add('animeTitle')
+            newTitle.innerText = animeTitle;
+
+            bodyContainer.append(newAnime);
+            newAnime.append(newImg);
+            newAnime.append(newTitle);
+        }
+    })
+})
+
+animeSearchForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const animeSearchInput = document.getElementById('animeSearchInput')
+    const searchedAnime = animeSearchInput.value;
+    bodyContainer.innerHTML = '';
+    fetch(`/anime/${searchedAnime}`)
+    .then((res) => res.json())
+    .then((anime) => {
+        const animeImage = anime.image;
+        const animeTitle = anime.name;
+
+        let newAnime = document.createElement('div');
+        newAnime.classList.add('anime')
+        let newImg = document.createElement('img');
+        newImg.classList.add('image');
+        newImg.src = animeImage;
+
+        let newTitle = document.createElement('div');
+        newTitle.classList.add('animeTitle')
+        newTitle.innerText = animeTitle;
+
+        bodyContainer.append(newAnime);
+        newAnime.append(newImg);
+        newAnime.append(newTitle);
+    })
+})
+
+// For reviewing anime; will find position later
 reviewForm.addEventListener('submit', (event) => {
     event.preventDefault();
+
+    const animeReviewInput = document.getElementById('anime');
+    const reviewInput = document.getElementById('review');
+    const reviewError = document.getElementById('reviewError')
 
     fetch('/anime')
     .then((res) => res.json())
     .then((anime) => {
         let animeName = "";
         for (let currentAnime of anime) {
-            if (currentAnime.name === animeReviewInput.value) {
+            if (currentAnime.name.toLowerCase() === animeReviewInput.value.toLowerCase()) {
                 animeName = currentAnime.name;
                 console.log(animeName);
                 break;
@@ -91,7 +155,6 @@ reviewForm.addEventListener('submit', (event) => {
         }
     })
 })
-
 
 
 
