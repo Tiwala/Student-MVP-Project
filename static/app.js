@@ -30,7 +30,7 @@ login.addEventListener('submit', (event) => {
         for (let weeb of weebs) {
             if (weeb.name === userLogin.value) {
                 currentUser = weeb.name;
-                console.log(currentUser);
+                console.log(weeb);
                 break;
             }
         }
@@ -58,7 +58,7 @@ login.addEventListener('submit', (event) => {
             .then((data) => {
                 // Makes the current user into the newly entered username
                 currentUser = data.name;
-                console.log(data.name);
+                console.log(data);
 
                 userLogDiv.innerHTML = '';
 
