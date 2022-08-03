@@ -8,9 +8,10 @@ const userLogDiv = document.getElementById('userLogDiv');
 const displayAnime = document.getElementById('displayAnime');
 const logo = document.getElementById('logo')
 
+// Global accumulator for currentUser
 let currentUser = "";
 
-
+// On clicking the logo, reloads the page
 logo.addEventListener('click', () => {
     location.reload();
 })
@@ -71,103 +72,37 @@ login.addEventListener('submit', (event) => {
     })
 })
 
+// On clicking the 'Anime List' tab, clears body and displays all anime
 displayAnime.addEventListener('click', () => {
     bodyContainer.innerHTML = '';
 
+    // Fetches anime table
     fetch('/anime')
     .then((res) => res.json())
     .then((anime) => {
+        // Iterates through anime database and displays image and title
         for (let currentAnime of anime) {
-            const animeImage = currentAnime.image;
             const animeTitle = currentAnime.name;
-
-            let newAnime = document.createElement('div');
-            newAnime.classList.add('anime')
-            let newImg = document.createElement('img');
-            newImg.classList.add('image');
-            newImg.src = animeImage;
-
             let newTitle = document.createElement('div');
-            newTitle.classList.add('animeTitle')
-            newTitle.innerText = animeTitle;
 
-            let spaceDiv = document.createElement('div')
-            spaceDiv.classList.add('spaceDiv');
+            showAnime(currentAnime, newTitle);
 
-            bodyContainer.append(newAnime);
-            newAnime.append(newImg);
-            newAnime.append(newTitle);
-            bodyContainer.append(spaceDiv);
-
+            // On clicking the title of an anime, directs user to clicked anime page
             newTitle.addEventListener('click', () => {
                 bodyContainer.innerHTML = '';
 
                 fetch(`/anime/${animeTitle}`)
                 .then((res) => res.json())
                 .then((anime) => {
-                    const animeImage = anime.image;
-                
-                    let newAnime = document.createElement('div');
-                    newAnime.classList.add('anime')
-                    let newImg = document.createElement('img');
-                    newImg.classList.add('image');
-                    newImg.src = animeImage;
-                
-                    let newTitle = document.createElement('div');
-                    newTitle.classList.add('animeTitle')
-                    newTitle.innerText = anime.name;
-                
-                    let spaceDiv = document.createElement('div')
-                    spaceDiv.classList.add('spaceDiv');
-                
-                    bodyContainer.append(newAnime);
-                    newAnime.append(newImg);
-                    newAnime.append(newTitle);
-                    bodyContainer.append(spaceDiv);
-                
+                    let newerTitle = document.createElement('div');
+                    showAnime(anime, newerTitle);
+                    
+                    // Goes through reviews table and displays all reviews for selected anime
                     fetch(`/reviews/${animeTitle}`)
                     .then((res) => res.json())
                     .then((reviews) => {
                         for (let currentReview of reviews) {
-                            let newReviewDiv = document.createElement('div');
-                            newReviewDiv.classList.add('newReview');
-
-                            let deleteError = document.createElement('div');
-                            deleteError.classList.add('deleteError');
-                            newReviewDiv.append(deleteError);
-
-                            let reviewDiv = document.createElement('div');
-                            reviewDiv.classList.add('reviewDiv');
-                            reviewDiv.innerText = `"${currentReview.review}"`;
-
-                            // deleteButton WORK IN PROGRESS
-                            let deleteButton = document.createElement('button');
-                            deleteButton.classList.add('deleteButton');
-                            deleteButton.innerText = 'Delete'
-                            newReviewDiv.append(deleteButton);
-                        
-                            let reviewerDiv = document.createElement('div');
-                            reviewerDiv.classList.add('reviewerDiv');
-                            reviewerDiv.innerText = `- ${currentReview.reviewer}`;
-                        
-                            newReviewDiv.append(reviewDiv);
-                            newReviewDiv.append(reviewerDiv);
-                            bodyContainer.append(newReviewDiv);
-
-                            deleteButton.addEventListener('click', () => {
-                                if (`- ${currentUser}` === reviewerDiv.innerText) {
-                                    newReviewDiv.innerHTML = '';
-
-                                    fetch(`/reviews/${currentReview.review_id}`, {
-                                        method: 'DELETE'
-                                    })
-                                    .then((data) => {
-                                        console.log(currentReview);
-                                    })
-                                } else {
-                                    deleteError.innerText = "You can't delete someone else's review, weeb!";
-                                }
-                            })
+                            displayReviews(currentReview);
                         }
                     })
                 })
@@ -176,85 +111,32 @@ displayAnime.addEventListener('click', () => {
     })
 })
 
+// Allows searching for specific anime
 animeSearchForm.addEventListener('submit', (event) => {
     event.preventDefault();
     const animeSearchInput = document.getElementById('animeSearchInput')
     const animeTitle = animeSearchInput.value;
     bodyContainer.innerHTML = '';
 
-
+    // Goes through anime table and displays specific anime searched
     fetch(`/anime/${animeTitle}`)
     .then((res) => res.json())
     .then((anime) => {
-        const animeImage = anime.image;
-
-        let newAnime = document.createElement('div');
-        newAnime.classList.add('anime')
-        let newImg = document.createElement('img');
-        newImg.classList.add('image');
-        newImg.src = animeImage;
-
         let newTitle = document.createElement('div');
-        newTitle.classList.add('animeTitle')
-        newTitle.innerText = anime.name;
+        showAnime(anime, newTitle);
 
-        let spaceDiv = document.createElement('div')
-        spaceDiv.classList.add('spaceDiv');
-
-        bodyContainer.append(newAnime);
-        newAnime.append(newImg);
-        newAnime.append(newTitle);
-        bodyContainer.append(spaceDiv);
-
+        // Displays reviews for selected anime
         fetch(`/reviews/${animeTitle}`)
         .then((res) => res.json())
         .then((reviews) => {
             for (let currentReview of reviews) {
-                let newReviewDiv = document.createElement('div');
-                newReviewDiv.classList.add('newReview');
-
-                let deleteError = document.createElement('div');
-                deleteError.classList.add('deleteError');
-                newReviewDiv.append(deleteError);
-
-                let reviewDiv = document.createElement('div');
-                reviewDiv.classList.add('reviewDiv');
-                reviewDiv.innerText = `"${currentReview.review}"`;
-
-                // deleteButton WORK IN PROGRESS
-                let deleteButton = document.createElement('button');
-                deleteButton.classList.add('deleteButton');
-                deleteButton.innerText = 'Delete'
-                newReviewDiv.append(deleteButton);
-
-                let reviewerDiv = document.createElement('div');
-                reviewerDiv.classList.add('reviewerDiv');
-                reviewerDiv.innerText = `- ${currentReview.reviewer}`;
-
-                newReviewDiv.append(reviewDiv);
-                newReviewDiv.append(reviewerDiv);
-                bodyContainer.append(newReviewDiv);
-
-                deleteButton.addEventListener('click', () => {
-                    if (`- ${currentUser}` === reviewerDiv.innerText) {
-                        newReviewDiv.innerHTML = '';
-
-                        fetch(`/reviews/${currentReview.review_id}`, {
-                            method: 'DELETE'
-                        })
-                        .then((data) => {
-                            console.log(currentReview);
-                        })
-                    } else {
-                        deleteError.innerText = "You can't delete someone else's review, weeb!";
-                    }
-                })
-            }
+                displayReviews(currentReview);
+            }  
         })
     })
 })
 
-// For reviewing anime; will find position later
+// Allows use to post new reviews
 reviewForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
@@ -262,9 +144,11 @@ reviewForm.addEventListener('submit', (event) => {
     const reviewInput = document.getElementById('review');
     const reviewError = document.getElementById('reviewError')
 
+    // Checks if anime inputted in form is within the database
     fetch('/anime')
     .then((res) => res.json())
     .then((anime) => {
+        // Accumulator for inputted anime
         let animeName = "";
         for (let currentAnime of anime) {
             if (currentAnime.name === animeReviewInput.value) {
@@ -273,12 +157,15 @@ reviewForm.addEventListener('submit', (event) => {
                 break;
             }
         }
+        // If user has not logged in, shows an error
         if (currentUser === "") {
             reviewError.innerText = "Login first, weeb!";
         }
+        // If inputted anime is not in the database, shows an error
         if (animeName === "") {
             reviewError.innerText = "That anime is not on our database, weeb!";
         } else {
+            // POST request
             let newReview = {
                 "anime": animeName,
                 "review": reviewInput.value,
@@ -293,52 +180,74 @@ reviewForm.addEventListener('submit', (event) => {
             })
             .then((res) => res.json())
             .then((data) => {
-                reviewError.innerHTML = "";
-                console.log(data);
-
-                let newReviewDiv = document.createElement('div');
-                newReviewDiv.classList.add('newReviewdiv')
-
-                let deleteError = document.createElement('div');
-                deleteError.classList.add('deleteError');
-                newReviewDiv.append(deleteError);
-
-                let reviewDiv = document.createElement('div');
-                reviewDiv.classList.add('reviewDiv');
-                reviewDiv.innerText = `"${reviewInput.value}"`;
-
-                // deleteButton WORK IN PROGRESS
-                let deleteButton = document.createElement('button');
-                deleteButton.classList.add('deleteButton');
-                deleteButton.innerText = 'Delete'
-                newReviewDiv.append(deleteButton);
-
-                let reviewerDiv = document.createElement('div');
-                reviewerDiv.classList.add('reviewerDiv');
-                reviewerDiv.innerText = `- ${currentUser}`;
-
-                newReviewDiv.append(reviewDiv);
-                newReviewDiv.append(reviewerDiv);
-                bodyContainer.append(newReviewDiv);
-
-                deleteButton.addEventListener('click', () => {
-                    if (`- ${currentUser}` === reviewerDiv.innerText) {
-                        newReviewDiv.innerHTML = '';
-
-                        fetch(`/reviews/${data.review_id}`, {
-                            method: 'DELETE'
-                        })
-                        .then((newData) => {
-                            console.log(data);
-                        })
-                    } else {
-                        deleteError.innerText = "You can't delete someone else's review, weeb!";
-                    }
-                })
+                // Pushes new review into the body on the spot
+                displayReviews(data);
             })
         }
     })
 })
 
+// Function for using DOM to display reviews
+const displayReviews = (currentReview) => {
+    let newReviewDiv = document.createElement('div');
+    newReviewDiv.classList.add('newReview');
 
+    let deleteError = document.createElement('div');
+    deleteError.classList.add('deleteError');
+    newReviewDiv.append(deleteError);
 
+    let reviewDiv = document.createElement('div');
+    reviewDiv.classList.add('reviewDiv');
+    reviewDiv.innerText = `"${currentReview.review}"`;
+
+    let deleteButton = document.createElement('button');
+    deleteButton.classList.add('deleteButton');
+    deleteButton.innerText = 'Delete'
+    newReviewDiv.append(deleteButton);
+
+    let reviewerDiv = document.createElement('div');
+    reviewerDiv.classList.add('reviewerDiv');
+    reviewerDiv.innerText = `- ${currentReview.reviewer}`;
+
+    newReviewDiv.append(reviewDiv);
+    newReviewDiv.append(reviewerDiv);
+    bodyContainer.append(newReviewDiv);
+
+    deleteButton.addEventListener('click', () => {
+        if (`- ${currentUser}` === reviewerDiv.innerText) {
+            newReviewDiv.innerHTML = '';
+
+            fetch(`/reviews/${currentReview.review_id}`, {
+                method: 'DELETE'
+            })
+            .then((data) => {
+                console.log(currentReview);
+            })
+        } else {
+            deleteError.innerText = "You can't delete someone else's review, weeb!";
+        }
+    })
+}
+
+// Function for using DOM to show anime
+const showAnime = (anime, newTitle) => {
+    const animeImage = anime.image;
+
+    let newAnime = document.createElement('div');
+    newAnime.classList.add('anime')
+
+    let newImg = document.createElement('img');
+    newImg.classList.add('image');
+    newImg.src = animeImage
+
+    newTitle.classList.add('animeTitle')
+    newTitle.innerText = anime.name
+
+    let spaceDiv = document.createElement('div')
+    spaceDiv.classList.add('spaceDiv')
+
+    bodyContainer.append(newAnime);
+    newAnime.append(newImg);
+    newAnime.append(newTitle);
+    bodyContainer.append(spaceDiv);
+}
