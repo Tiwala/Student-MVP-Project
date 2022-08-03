@@ -20,8 +20,9 @@ html {
     cursor: pointer;
 }
 
-.userLog {
-    width: 100%;
+#userLogDiv {
+    width: 200px;
+    height: 80px;
 }
 
 #loginButton:hover {
