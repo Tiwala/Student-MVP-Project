@@ -129,16 +129,45 @@ displayAnime.addEventListener('click', () => {
                     .then((res) => res.json())
                     .then((reviews) => {
                         for (let currentReview of reviews) {
+                            let newReviewDiv = document.createElement('div');
+                            newReviewDiv.classList.add('newReview');
+
+                            let deleteError = document.createElement('div');
+                            deleteError.classList.add('deleteError');
+                            newReviewDiv.append(deleteError);
+
                             let reviewDiv = document.createElement('div');
                             reviewDiv.classList.add('reviewDiv');
                             reviewDiv.innerText = `"${currentReview.review}"`;
+
+                            // deleteButton WORK IN PROGRESS
+                            let deleteButton = document.createElement('button');
+                            deleteButton.classList.add('deleteButton');
+                            deleteButton.innerText = 'Delete'
+                            newReviewDiv.append(deleteButton);
                         
                             let reviewerDiv = document.createElement('div');
                             reviewerDiv.classList.add('reviewerDiv');
                             reviewerDiv.innerText = `- ${currentReview.reviewer}`;
                         
-                            bodyContainer.append(reviewDiv);
-                            bodyContainer.append(reviewerDiv);
+                            newReviewDiv.append(reviewDiv);
+                            newReviewDiv.append(reviewerDiv);
+                            bodyContainer.append(newReviewDiv);
+
+                            deleteButton.addEventListener('click', () => {
+                                if (`- ${currentUser}` === reviewerDiv.innerText) {
+                                    newReviewDiv.innerHTML = '';
+
+                                    fetch(`/reviews/${currentReview.review_id}`, {
+                                        method: 'DELETE'
+                                    })
+                                    .then((data) => {
+                                        console.log(currentReview);
+                                    })
+                                } else {
+                                    deleteError.innerText = "You can't delete someone else's review, weeb!";
+                                }
+                            })
                         }
                     })
                 })
@@ -181,16 +210,45 @@ animeSearchForm.addEventListener('submit', (event) => {
         .then((res) => res.json())
         .then((reviews) => {
             for (let currentReview of reviews) {
+                let newReviewDiv = document.createElement('div');
+                newReviewDiv.classList.add('newReview');
+
+                let deleteError = document.createElement('div');
+                deleteError.classList.add('deleteError');
+                newReviewDiv.append(deleteError);
+
                 let reviewDiv = document.createElement('div');
                 reviewDiv.classList.add('reviewDiv');
                 reviewDiv.innerText = `"${currentReview.review}"`;
+
+                // deleteButton WORK IN PROGRESS
+                let deleteButton = document.createElement('button');
+                deleteButton.classList.add('deleteButton');
+                deleteButton.innerText = 'Delete'
+                newReviewDiv.append(deleteButton);
 
                 let reviewerDiv = document.createElement('div');
                 reviewerDiv.classList.add('reviewerDiv');
                 reviewerDiv.innerText = `- ${currentReview.reviewer}`;
 
-                bodyContainer.append(reviewDiv);
-                bodyContainer.append(reviewerDiv);
+                newReviewDiv.append(reviewDiv);
+                newReviewDiv.append(reviewerDiv);
+                bodyContainer.append(newReviewDiv);
+
+                deleteButton.addEventListener('click', () => {
+                    if (`- ${currentUser}` === reviewerDiv.innerText) {
+                        newReviewDiv.innerHTML = '';
+
+                        fetch(`/reviews/${currentReview.review_id}`, {
+                            method: 'DELETE'
+                        })
+                        .then((data) => {
+                            console.log(currentReview);
+                        })
+                    } else {
+                        deleteError.innerText = "You can't delete someone else's review, weeb!";
+                    }
+                })
             }
         })
     })
@@ -238,23 +296,49 @@ reviewForm.addEventListener('submit', (event) => {
                 reviewError.innerHTML = "";
                 console.log(data);
 
+                let newReviewDiv = document.createElement('div');
+                newReviewDiv.classList.add('newReviewdiv')
+
+                let deleteError = document.createElement('div');
+                deleteError.classList.add('deleteError');
+                newReviewDiv.append(deleteError);
+
                 let reviewDiv = document.createElement('div');
                 reviewDiv.classList.add('reviewDiv');
                 reviewDiv.innerText = `"${reviewInput.value}"`;
+
+                // deleteButton WORK IN PROGRESS
+                let deleteButton = document.createElement('button');
+                deleteButton.classList.add('deleteButton');
+                deleteButton.innerText = 'Delete'
+                newReviewDiv.append(deleteButton);
 
                 let reviewerDiv = document.createElement('div');
                 reviewerDiv.classList.add('reviewerDiv');
                 reviewerDiv.innerText = `- ${currentUser}`;
 
-                bodyContainer.append(reviewDiv);
-                bodyContainer.append(reviewerDiv);
+                newReviewDiv.append(reviewDiv);
+                newReviewDiv.append(reviewerDiv);
+                bodyContainer.append(newReviewDiv);
+
+                deleteButton.addEventListener('click', () => {
+                    if (`- ${currentUser}` === reviewerDiv.innerText) {
+                        newReviewDiv.innerHTML = '';
+
+                        fetch(`/reviews/${data.review_id}`, {
+                            method: 'DELETE'
+                        })
+                        .then((newData) => {
+                            console.log(data);
+                        })
+                    } else {
+                        deleteError.innerText = "You can't delete someone else's review, weeb!";
+                    }
+                })
             })
         }
     })
 })
-
-
-
 
 
 

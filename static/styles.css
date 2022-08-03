@@ -91,14 +91,28 @@ html {
     height: 30px;
 }
 
-.reviewerDiv {
-    margin-bottom: 20px;
-}
-
-#reviewDiv {
+.newReviewDiv {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+    width: 400px;
+}
+
+.reviewDiv {
+    text-align: center;
+    width: 400px;
+    overflow-wrap: break-word;
+}
+
+.reviewerDiv {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.deleteButton {
+    position: absolute;
+    margin-left: 500px;
 }
 
 #reviewForm {
@@ -107,6 +121,12 @@ html {
 }
 
 #reviewError {
+    color: red;
+    font-weight: bold;
+}
+
+.deleteError {
+    text-align: center;
     color: red;
     font-weight: bold;
 }
