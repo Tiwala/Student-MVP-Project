@@ -4,3 +4,4 @@
     - Login feature (no password)
     - Search feature
     - Create reviews!
+    - Delete reviews (cannot delete if it's not your review)
