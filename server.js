@@ -21,6 +21,7 @@ if (process.env.NODE_ENV === "production") {
 
 const pool = new pg.Pool(dbConfig);
 
+// THIS looks for which static files it serves
 app.use(express.static("static"));
 
 // const pool = new pg.Pool({

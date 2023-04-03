@@ -25,7 +25,7 @@ login.addEventListener('submit', (event) => {
 
     // On click, makes a fetch request for the weebs table
     fetch('/weebs')
-    .then((res) => res.json())
+    .then((res) => console.log(res.json()))
     .then((weebs) => {
         // Checks if the weebs table has the entered username in weebs
         for (let weeb of weebs) {
