@@ -35,6 +35,7 @@ const unknownHTTP = (req, res, next) => {
 
 // If my code is wrong
 const internalError = (err, req, res, next) => {
+    console.error(err);
     res.status(500).send('Internal Server Error');
 }
 
