@@ -35,7 +35,7 @@ const unknownHTTP = (req, res, next) => {
 
 // If my code is wrong
 const internalError = (err, req, res, next) => {
-    console.error(err);
+    console.log("you fucked up bruh INTERNAL ERROR");
     res.status(500).send('Internal Server Error');
 }
 
@@ -92,7 +92,9 @@ app.delete('/weebs/:weeb', (req, res, next) => {
 
 // Gets anime list from anime table
 app.get('/anime', (req, res, next) => {
+    console.log("This is the get request for the anime table");
     pool.query('SELECT * FROM anime').then((data) => {
+        console.log("the anime list response")
         res.send(data.rows);
     }).catch(next)
 })
