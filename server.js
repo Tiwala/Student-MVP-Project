@@ -1,6 +1,8 @@
 import express from 'express'
 import pg from 'pg'
 import dotenv from 'dotenv'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
 // Configures environmental variables
 dotenv.config();
@@ -8,6 +10,11 @@ dotenv.config();
 // Global constants
 const app = express();
 const PORT = process.env.PORT || 6969;
+
+// Define __dirname for ES module scope
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // Makes sure you are connected
 const dbConfig = {
     connectionString: process.env.DATABASE_URL
@@ -22,7 +29,9 @@ if (process.env.NODE_ENV === "production") {
 const pool = new pg.Pool(dbConfig);
 
 // THIS looks for which static files it serves
-app.use(express.static("static"));
+// app.use(express.static("static"));
+
+app.use(express.static(path.join(__dirname, 'static')));
 
 // const pool = new pg.Pool({
 //     database: process.env.PGDATABASE
@@ -232,14 +241,6 @@ app.delete('/reviews/:id', (req, res, next) => {
 app.use(unknownHTTP);
 
 app.use(internalError);
-
-if(process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '/frontend/dist')));
-    // '*' is a wildcard, meaning that any route that is not defined in the backend will be redirected to the frontend
-    app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'));
-    });
-}
 
 app.listen(PORT, () => {
     console.log(`server started on port ${PORT}`);
