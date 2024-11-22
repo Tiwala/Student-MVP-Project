@@ -35,7 +35,7 @@ const unknownHTTP = (req, res, next) => {
 
 // If my code is wrong
 const internalError = (err, req, res, next) => {
-    console.log("you fucked up bruh INTERNAL ERROR");
+    // console.log("you fucked up bruh INTERNAL ERROR");
     res.status(500).send('Internal Server Error');
 }
 
@@ -94,7 +94,8 @@ app.delete('/weebs/:weeb', (req, res, next) => {
 app.get('/anime', (req, res, next) => {
     console.log("This is the get request for the anime table");
     pool.query('SELECT * FROM anime').then((data) => {
-        console.log("the anime list response")
+        // console.log("the anime list response")
+        // console.log(data.rows)
         res.send(data.rows);
     }).catch(next)
 })
@@ -231,6 +232,14 @@ app.delete('/reviews/:id', (req, res, next) => {
 app.use(unknownHTTP);
 
 app.use(internalError);
+
+if(process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '/frontend/dist')));
+    // '*' is a wildcard, meaning that any route that is not defined in the backend will be redirected to the frontend
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'));
+    });
+}
 
 app.listen(PORT, () => {
     console.log(`server started on port ${PORT}`);
