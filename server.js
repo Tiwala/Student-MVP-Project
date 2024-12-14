@@ -9,22 +9,29 @@ dotenv.config();
 
 // Global constants
 const app = express();
-const PORT = process.env.PORT || 6969;
+const PORT = process.env.PORT || 5000;
 
 // Define __dirname for ES module scope
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Makes sure you are connected
-const dbConfig = {
-    connectionString: process.env.DATABASE_URL
-};
+// const dbConfig = {
+//     connectionString: process.env.DATABASE_URL
+// };
 
-if (process.env.NODE_ENV === "production") {
-    dbConfig.ssl = {
+// if (process.env.NODE_ENV === "production") {
+//     dbConfig.ssl = {
+//         rejectUnauthorized: false
+//     };
+// }
+
+const dbConfig = {
+    connectionString: process.env.DATABASE_PUBLIC_URL,
+    ssl: {
         rejectUnauthorized: false
-    };
-}
+    }
+};
 
 const pool = new pg.Pool(dbConfig);
 
