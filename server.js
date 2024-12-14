@@ -48,6 +48,16 @@ app.use(express.static(path.join(__dirname, 'static')));
 //     database: process.env.PGDATABASE
 // });
 
+// Log database connection status
+pool.connect((err, client, release) => {
+    if (err) {
+        console.error('Error acquiring client', err.stack);
+    } else {
+        console.log('Database connected successfully');
+        release();
+    }
+});
+
 // Error handler for if they have an unknown path
 const unknownHTTP = (req, res, next) => {
     res.sendStatus(404);
