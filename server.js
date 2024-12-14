@@ -19,6 +19,17 @@ app.get('/', (req, res) => {
     res.send('Server is running');
 });
 
+// Error handler for if they have an unknown path
+const unknownHTTP = (req, res, next) => {
+    res.sendStatus(404);
+}
+
+// If my code is wrong
+const internalError = (err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Internal Server Error');
+}
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
