@@ -52,6 +52,10 @@ app.get('/', (req, res) => {
     res.send('Server is running');
 });
 
+app.get('/health', (req, res) => {
+    res.status(200).send('OK');
+});
+
 // Error handler for if they have an unknown path
 const unknownHTTP = (req, res, next) => {
     res.sendStatus(404);
