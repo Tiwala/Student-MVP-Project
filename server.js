@@ -58,6 +58,18 @@ pool.connect((err, client, release) => {
     }
 });
 
+// Serve the log file for debugging
+app.get('/logs', (req, res) => {
+    const logFilePath = path.join(__dirname, 'server.log');
+    fs.readFile(logFilePath, 'utf8', (err, data) => {
+        if (err) {
+            res.status(500).send('Error reading log file');
+        } else {
+            res.type('text/plain').send(data);
+        }
+    });
+});
+
 // Error handler for if they have an unknown path
 const unknownHTTP = (req, res, next) => {
     res.sendStatus(404);
