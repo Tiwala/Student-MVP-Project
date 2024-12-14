@@ -26,8 +26,12 @@ const __dirname = path.dirname(__filename);
 //     };
 // }
 
+// Determine which database URL to use
+const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_PUBLIC_URL;
+
+// PostgreSQL connection configuration
 const dbConfig = {
-    connectionString: process.env.DATABASE_PUBLIC_URL,
+    connectionString: DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
     }
