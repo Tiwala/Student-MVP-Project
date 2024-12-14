@@ -1,2 +1,4 @@
 /node_modules/
 .env
+serverIGNORED.js
+backupPackage.json
